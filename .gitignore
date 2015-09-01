@@ -1,0 +1,6 @@
+*.pdb
+*.cache
+webis.naiveBayes/bin/Debug/webis.naiveBayes.vshost.exe
+*.suo
+webis.naiveBayes/bin/Debug/webis.naiveBayes.exe
+*.exe
