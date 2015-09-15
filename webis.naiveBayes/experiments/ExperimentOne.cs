@@ -22,6 +22,7 @@ namespace webis.naiveBayes.experiments
             var categories = new List<TextSource>();
             var processor = new WordLevelProcessor();
 
+            // Prepare data
             foreach (var item in authors)
             {
                 var docs = item.GetFiles();
@@ -44,32 +45,56 @@ namespace webis.naiveBayes.experiments
 
             Console.WriteLine("Scanned {1} documents in {0} categories", categories.Count, categories.Select(el => el.Documents.Count).Aggregate((el1, el2) => el1 + el2));
 
-            Console.WriteLine("Set n=2");
-            Console.WriteLine("classifying documents of category 1");
+            var testPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test");
+            var testAuthors = new DirectoryInfo(testPath).GetDirectories();
+            var allInOne = new TextSource();
+            allInOne.Documents.AddRange(categories.SelectMany(el => el.Documents));
 
-            int x = 0;
-            foreach (var item in new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test")).GetDirectories()[0].GetFiles())
+            // choose n from 1 to 4
+            for (int n = 2; n <= 4; n++)
             {
-                x++;
-                Console.WriteLine("\n-----------------------");
-                Console.WriteLine("Classifying document {0} of 10", x);
+                var smoothing = new AbsoluteSmoothing(allInOne, n);
+                var categoriesToTest = new Dictionary<TextSource, CategoryProbabilityDistribution>();
 
-                double maxP = -100000;
-                int maxI = 0;
-
-                Parallel.For(0, 10, i =>
+                Console.WriteLine("-----PREPARE for n = {0}", n);
+                Parallel.ForEach(categories, cat =>
                 {
-                    double p = bayesClassifier.P_c(categories[i], categories[0].Documents[0], 2, 1.0 / 10.0);
-                    Console.WriteLine("Prob cat {1}: {0}", p, i + 1);
-
-                    if(p > maxP)
-                    {
-                        maxP = p;
-                        maxI = i;
-                    }
+                    categoriesToTest[cat] = new CategoryProbabilityDistribution(cat, smoothing, n);
                 });
 
-                Console.WriteLine("Classified document as category {0}", maxI + 1);
+                int rightClassified = 0;
+                int wrongClassified = 0;
+
+                foreach (var testAuthor in testAuthors)
+                {
+                    Parallel.ForEach(testAuthor.GetFiles(), testDocument =>
+                    {
+                        TextSource topCategory = null;
+                        var maxProb = 0.0;
+
+                        foreach (var catDist in categoriesToTest)
+                        {
+                            var docText = new[] { docReader.ReadDocumentText(testDocument.FullName) };
+                            var docSource = processor.Process(docText, testAuthor.Name).Documents.First();
+
+                            double p = bayesClassifier.P_c(catDist.Value, docSource, n, 1.0 / (double)categories.Count);
+
+                            if (topCategory == null || p > maxProb)
+                            {
+                                topCategory = catDist.Key;
+                                maxProb = p;
+                            }
+                        }
+
+                        Console.WriteLine("Classified {0} as author {1} - {2}", testDocument.Name, topCategory.Name, topCategory.Name == testAuthor.Name ? "correct" : "incorrect");
+
+                        if (topCategory.Name == testAuthor.Name) rightClassified++;
+                        else wrongClassified++;
+                    });
+                }
+
+                Console.WriteLine("-----SUMMARY");
+                Console.WriteLine("Success rate for n={0} is {1}\n", n, (double)rightClassified / ((double)rightClassified + (double)wrongClassified));
             }
         }
     }

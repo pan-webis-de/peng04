@@ -4,3 +4,5 @@ webis.naiveBayes/bin/Debug/webis.naiveBayes.vshost.exe
 *.suo
 webis.naiveBayes/bin/Debug/webis.naiveBayes.exe
 *.exe
+*.cache
+webis.naiveBayes/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache

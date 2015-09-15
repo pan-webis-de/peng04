@@ -12,9 +12,9 @@ namespace webis.naiveBayes.logic
         private TextSource _referenceSource;
         private ISmoothingTechnique _smoothing;
 
-        public CategoryProbabilityDistribution(TextSource referenceSource, int n)
+        public CategoryProbabilityDistribution(TextSource referenceSource, ISmoothingTechnique smoothing, int n)
         {
-            _smoothing = new AbsoluteSmoothing(referenceSource, n);
+            _smoothing = smoothing;
             _referenceSource = referenceSource;
         }
 

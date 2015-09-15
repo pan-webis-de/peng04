@@ -7,3 +7,9 @@ c:\users\winfr_000\documents\visual studio 2013\Projects\webis.naiveBayes\webis.
 E:\Winfried\gitHub\naiveBayes-statisticalLanguage\webis.naiveBayes\bin\Debug\webis.naiveBayes.exe.config
 E:\Winfried\gitHub\naiveBayes-statisticalLanguage\webis.naiveBayes\obj\Debug\webis.naiveBayes.exe
 E:\Winfried\gitHub\naiveBayes-statisticalLanguage\webis.naiveBayes\obj\Debug\webis.naiveBayes.pdb
+E:\Winfried\gitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.exe.config
+E:\Winfried\gitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.exe
+E:\Winfried\gitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.pdb
+E:\Winfried\gitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.exe
+E:\Winfried\gitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.pdb
+E:\Winfried\gitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.csprojResolveAssemblyReference.cache

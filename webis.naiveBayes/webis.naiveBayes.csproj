@@ -46,6 +46,7 @@
     <Compile Include="logic\BayesTextClassifier.cs" />
     <Compile Include="logic\CategoryProbabilityDistribution.cs" />
     <Compile Include="logic\ISmoothingTechnique.cs" />
+    <Compile Include="logic\LinearSmoothing.cs" />
     <Compile Include="processing\CharacterLevelProcessor.cs" />
     <Compile Include="processing\ILanguageProcessor.cs" />
     <Compile Include="processing\DocumentSource.cs" />
