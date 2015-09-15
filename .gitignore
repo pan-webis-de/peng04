@@ -6,3 +6,4 @@ webis.naiveBayes/bin/Debug/webis.naiveBayes.exe
 *.exe
 *.cache
 webis.naiveBayes/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+*.cache
