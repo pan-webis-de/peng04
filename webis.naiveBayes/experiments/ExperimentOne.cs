@@ -20,8 +20,7 @@ namespace webis.naiveBayes.experiments
             var authors = new DirectoryInfo(docPath).GetDirectories();
 
             var categories = new List<TextSource>();
-            var processor = new WordLevelProcessor();
-            var character_processor = new CharacterLevelProcessor();
+            var processor = new WordLevelProcessor(); // new CharacterLevelProcessor();
 
             // Prepare data
             foreach (var item in authors)
@@ -41,7 +40,7 @@ namespace webis.naiveBayes.experiments
                     }
                 }
 
-                categories.Add(character_processor.Process(dataSource, item.Name));
+                categories.Add(processor.Process(dataSource, item.Name));
             }
 
             Console.WriteLine("Scanned {1} documents in {0} categories", categories.Count, categories.Select(el => el.Documents.Count).Aggregate((el1, el2) => el1 + el2));
@@ -77,7 +76,7 @@ namespace webis.naiveBayes.experiments
                         foreach (var catDist in categoriesToTest)
                         {
                             var docText = new[] { docReader.ReadDocumentText(testDocument.FullName) };
-                            var docSource = character_processor.Process(docText, testAuthor.Name).Documents.First();
+                            var docSource = processor.Process(docText, testAuthor.Name).Documents.First();
 
                             double p = bayesClassifier.P_c(catDist.Value, docSource, n, 1.0 / (double)categories.Count);
 
