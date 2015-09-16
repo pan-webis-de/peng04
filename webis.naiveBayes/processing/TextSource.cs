@@ -22,7 +22,7 @@ namespace webis.naiveBayes.processing
                 // considering unigrams, we need to fit prob 1 total
                 // this means we have to divide by number of segments total
 
-                return Documents.SelectMany(el => el.LanguageSegments).Count();
+                return Documents.Aggregate(0, (count, doc) => count + doc.LanguageSegments.Count);
             }
 
             int result = 0;
@@ -37,7 +37,7 @@ namespace webis.naiveBayes.processing
 
         public IEnumerable<string> GetAllSegments()
         {
-            return Documents.SelectMany(el => el.LanguageSegments).Distinct();
+            return Documents.SelectMany(el => el.LanguageSegments).Distinct().ToArray();
         }
 
         public string Name { get; set; }

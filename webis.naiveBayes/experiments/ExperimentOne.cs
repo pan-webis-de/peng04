@@ -21,6 +21,7 @@ namespace webis.naiveBayes.experiments
 
             var categories = new List<TextSource>();
             var processor = new WordLevelProcessor();
+            var character_processor = new CharacterLevelProcessor();
 
             // Prepare data
             foreach (var item in authors)
@@ -40,7 +41,7 @@ namespace webis.naiveBayes.experiments
                     }
                 }
 
-                categories.Add(processor.Process(dataSource, item.Name));
+                categories.Add(character_processor.Process(dataSource, item.Name));
             }
 
             Console.WriteLine("Scanned {1} documents in {0} categories", categories.Count, categories.Select(el => el.Documents.Count).Aggregate((el1, el2) => el1 + el2));
@@ -51,22 +52,23 @@ namespace webis.naiveBayes.experiments
             allInOne.Documents.AddRange(categories.SelectMany(el => el.Documents));
 
             // choose n from 1 to 4
-            for (int n = 2; n <= 4; n++)
+            for (int n = 1; n <= 4; n++)
             {
-                var smoothing = new AbsoluteSmoothing(allInOne, n);
+                var smoothing = new AbsoluteSmoothing(0.71977041805630959); //new AbsoluteSmoothing(allInOne, n);
                 var categoriesToTest = new Dictionary<TextSource, CategoryProbabilityDistribution>();
 
                 Console.WriteLine("-----PREPARE for n = {0}", n);
-                Parallel.ForEach(categories, cat =>
+                foreach(var cat in categories)
                 {
                     categoriesToTest[cat] = new CategoryProbabilityDistribution(cat, smoothing, n);
-                });
+                }
 
                 int rightClassified = 0;
                 int wrongClassified = 0;
 
                 foreach (var testAuthor in testAuthors)
                 {
+                    //foreach (var testDocument in testAuthor.GetFiles())
                     Parallel.ForEach(testAuthor.GetFiles(), testDocument =>
                     {
                         TextSource topCategory = null;
@@ -75,7 +77,7 @@ namespace webis.naiveBayes.experiments
                         foreach (var catDist in categoriesToTest)
                         {
                             var docText = new[] { docReader.ReadDocumentText(testDocument.FullName) };
-                            var docSource = processor.Process(docText, testAuthor.Name).Documents.First();
+                            var docSource = character_processor.Process(docText, testAuthor.Name).Documents.First();
 
                             double p = bayesClassifier.P_c(catDist.Value, docSource, n, 1.0 / (double)categories.Count);
 
@@ -91,6 +93,7 @@ namespace webis.naiveBayes.experiments
                         if (topCategory.Name == testAuthor.Name) rightClassified++;
                         else wrongClassified++;
                     });
+                    //}
                 }
 
                 Console.WriteLine("-----SUMMARY");

@@ -15,7 +15,7 @@ namespace webis.naiveBayes.logic
 
             for (int i = 0; i <= testData.LanguageSegments.Count - n; i++)
             {
-                IEnumerable<string> ngram = testData.LanguageSegments.Skip(i).Take(n);
+                IEnumerable<string> ngram = testData.LanguageSegments.Skip(i).Take(n).ToArray();
                 result += Math.Log10(trainingDistribution.GetProbability(ngram));
             }
 

@@ -21,14 +21,14 @@ namespace webis.naiveBayes.logic
         public double GetProbability(IEnumerable<string> ngram)
         {
             if (ngram.Count() == 0) throw new ArgumentException("ngram");
-            if (ngram.Count() == 1) return _smoothing.Discount(_referenceSource.FindOccurrences(ngram) + 1) / (_referenceSource.FindOccurrences(new string[0]) + _referenceSource.GetAllSegments().Count());
-            // if we cannot find the word at all, give it at least one count (laplace, add one)
-
             int frequency = _referenceSource.FindOccurrences(ngram);
+
+            // if we cannot find the word at all, give it at least one count (laplace, add one)
+            if (ngram.Count() == 1) return GetProbabilityIfPresent(ngram, frequency + 1);
 
             if(frequency > 0)
             {
-                return _smoothing.Discount(frequency) / _referenceSource.FindOccurrences(ngram.Take(ngram.Count() - 1));
+                return GetProbabilityIfPresent(ngram, frequency);
             }
             else
             {
@@ -44,16 +44,23 @@ namespace webis.naiveBayes.logic
             foreach (var item in _referenceSource.GetAllSegments())
             {
                 ngramArray[ngramArray.Length - 1] = item; // replace last segment
-                int frequency = _referenceSource.FindOccurrences(ngramArray);
+                int frequencyA = _referenceSource.FindOccurrences(ngramArray);
 
-                if(frequency > 0)
+                if(frequencyA > 0)
                 {
-                    a += GetProbability(ngramArray);
-                    b += GetProbability(ngramArray.Skip(1));
+                    int frequencyB = _referenceSource.FindOccurrences(ngramArray.Skip(1).ToArray());
+
+                    a += GetProbabilityIfPresent(ngramArray, frequencyA);
+                    b += GetProbabilityIfPresent(ngramArray.Skip(1).ToArray(), frequencyB);
                 }
             }
 
             return (1.0 - a) / (1.0 - b);
+        }
+
+        private double GetProbabilityIfPresent(IEnumerable<string> ngram, int frequency)
+        {
+            return _smoothing.Discount(frequency) / _referenceSource.FindOccurrences(ngram.Take(ngram.Count() - 1));
         }
     }
 }

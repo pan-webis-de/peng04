@@ -13,7 +13,7 @@ namespace webis.naiveBayes.processing
         public string ReadDocumentText(string fileName)
         {
             string fullText = string.Empty;
-            using (StreamReader sr = new StreamReader(fileName))
+            using (StreamReader sr = new StreamReader(fileName, Encoding.GetEncoding(1253)))
             {
                 fullText = sr.ReadToEnd();
             }
@@ -23,12 +23,14 @@ namespace webis.naiveBayes.processing
 
             if (startIndex > stopIndex || stopIndex < 0 || startIndex < 0) throw new ArgumentException("file structure invalid");
 
-            return new string(fullText.Skip(startIndex).Take(stopIndex - startIndex).ToArray())
+            var result = new string(fullText.Skip(startIndex).Take(stopIndex - startIndex).ToArray())
                 .Replace("\r\n", " ")
                 .Replace("\n", " ")
-                .Replace(",", string.Empty)
-                .Replace(".", string.Empty)
+                .Replace(",", " ")
+                .Replace(".", " ")
                 .ToLower(new CultureInfo("el-GR"));
+
+            return result;
         }
     }
 }

@@ -10,7 +10,12 @@ namespace webis.naiveBayes.logic
     public class AbsoluteSmoothing : ISmoothingTechnique
     {
         private TextSource _referenceSource;
-        private double b;
+        private double _b;
+
+        public AbsoluteSmoothing(double b)
+        {
+            _b = b;
+        }
 
         public AbsoluteSmoothing(TextSource referenceSource, int n)
         {
@@ -26,8 +31,8 @@ namespace webis.naiveBayes.logic
             {
                 for (int i = 0; i <= item.LanguageSegments.Count - n; i++)
                 {
-                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n);
-                    if (checkedGrams.Any(el => !el.Intersect(ngram).Any())) continue;
+                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n).ToArray();
+                    if (checkedGrams.Any(el => el.SequenceEqual(ngram))) continue;
                     
                     checkedGrams.Add(ngram);
                     int frequency = _referenceSource.FindOccurrences(ngram);
@@ -37,12 +42,12 @@ namespace webis.naiveBayes.logic
                 }
             }
 
-            b = (double)n1 / ((double)n1 + 2 * (double)n2);
+            _b = (double)n1 / ((double)n1 + 2 * (double)n2);
         }
 
         public double Discount(int frequency)
         {
-            return frequency - b;
+            return frequency - _b;
         }
     }
 }

@@ -29,6 +29,7 @@ namespace webis.naiveBayes.processing
                 result.Documents.Add(doc);
             }
 
+            result.Name = name;
             return result;
         }
     }
