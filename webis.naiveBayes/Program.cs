@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,18 @@ namespace webis.naiveBayes
     {
         static void Main(string[] args)
         {
-            new ExperimentOne().Start();
+            if (!args.Any())
+            {
+                Console.WriteLine("you must specify a directory");
+            }
+            else if (!Directory.Exists(args[0]))
+            {
+                Console.WriteLine("Directory {0} not found", args[0]);
+            }
+            else
+            {
+                new TiraExperiment().Start(args[0], false);
+            }
 
             Console.WriteLine("Press [ENTER] to continue ...");
             Console.ReadLine();

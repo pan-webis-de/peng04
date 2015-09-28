@@ -35,6 +35,14 @@ namespace webis.naiveBayes.processing
             return result;
         }
 
+        public void BuildSegmentTable(int n)
+        {
+            foreach(var item in Documents)
+            {
+                item.BuildSegmentTable(n);
+            }
+        }
+
         public IEnumerable<string> GetAllSegments()
         {
             return Documents.SelectMany(el => el.LanguageSegments).Distinct().ToArray();

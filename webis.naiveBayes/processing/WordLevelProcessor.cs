@@ -20,8 +20,10 @@ namespace webis.naiveBayes.processing
             foreach (var item in documents)
             {
                 var doc = new DocumentSource();
+                var sItem = item.Replace(".", " . ")
+                                .Replace(",", " , ");
 
-                foreach (var segment in item.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var segment in sItem.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     doc.LanguageSegments.Add(segment);
                 }

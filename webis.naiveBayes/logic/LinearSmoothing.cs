@@ -23,9 +23,9 @@ namespace webis.naiveBayes.logic
             {
                 for (int i = 0; i <= item.LanguageSegments.Count - n; i++)
                 {
-                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n);
-                    if (checkedGrams.Any(el => !el.Intersect(ngram).Any())) continue;
-                    
+                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n).ToArray();
+                    if (checkedGrams.Any(el => el.SequenceEqual(ngram))) continue;
+
                     checkedGrams.Add(ngram);
                     int frequency = referenceSource.FindOccurrences(ngram);
 

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace webis.naiveBayes.processing
 {
-    public class ReadDocumentFromFile
+    public class ReadDocumentFromXmlFile
     {
-        public string ReadDocumentText(string fileName)
+        public string ReadDocumentText(string fileName, Encoding encoding, CultureInfo cultureInfo)
         {
             string fullText = string.Empty;
-            using (StreamReader sr = new StreamReader(fileName, Encoding.GetEncoding(1253)))
+            using (StreamReader sr = new StreamReader(fileName, encoding)) // Encoding.GetEncoding(1253)
             {
                 fullText = sr.ReadToEnd();
             }
@@ -22,13 +22,9 @@ namespace webis.naiveBayes.processing
             int stopIndex = fullText.IndexOf("</TEXT>", StringComparison.OrdinalIgnoreCase);
 
             if (startIndex > stopIndex || stopIndex < 0 || startIndex < 0) throw new ArgumentException("file structure invalid");
-
+            
             var result = new string(fullText.Skip(startIndex).Take(stopIndex - startIndex).ToArray())
-                .Replace("\r\n", " ")
-                .Replace("\n", " ")
-                .Replace(",", " ")
-                .Replace(".", " ")
-                .ToLower(new CultureInfo("el-GR"));
+                .ToLower(cultureInfo);
 
             return result;
         }

@@ -9,6 +9,7 @@ namespace webis.naiveBayes.logic
 {
     public class CategoryProbabilityDistribution
     {
+        private Dictionary<string, double> _betaCache = new Dictionary<string, double>(); 
         private TextSource _referenceSource;
         private ISmoothingTechnique _smoothing;
 
@@ -38,8 +39,11 @@ namespace webis.naiveBayes.logic
 
         private double GetBeta(IEnumerable<string> ngram)
         {
-            double a = 0.0, b = 0.0;
             string[] ngramArray = ngram.ToArray();
+            var hash = NGramHashing.Hash(ngramArray.Take(ngramArray.Length - 1));
+            if (_betaCache.ContainsKey(hash)) return _betaCache[hash];
+
+            double a = 0.0, b = 0.0;
 
             foreach (var item in _referenceSource.GetAllSegments())
             {
@@ -55,7 +59,9 @@ namespace webis.naiveBayes.logic
                 }
             }
 
-            return (1.0 - a) / (1.0 - b);
+            var beta = (1.0 - a) / (1.0 - b);
+            _betaCache[hash] = beta;
+            return beta;
         }
 
         private double GetProbabilityIfPresent(IEnumerable<string> ngram, int frequency)

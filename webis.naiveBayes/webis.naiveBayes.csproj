@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="experiments\ExperimentOne.cs" />
+    <Compile Include="experiments\TiraExperiment.cs" />
     <Compile Include="logic\AbsoluteSmoothing.cs" />
     <Compile Include="logic\BayesTextClassifier.cs" />
     <Compile Include="logic\CategoryProbabilityDistribution.cs" />
@@ -50,7 +54,9 @@
     <Compile Include="processing\CharacterLevelProcessor.cs" />
     <Compile Include="processing\ILanguageProcessor.cs" />
     <Compile Include="processing\DocumentSource.cs" />
-    <Compile Include="processing\ReadDocumentFromFile.cs" />
+    <Compile Include="processing\NGramHashing.cs" />
+    <Compile Include="processing\ReadDocumentFromTiraFile.cs" />
+    <Compile Include="processing\ReadDocumentFromXmlFile.cs" />
     <Compile Include="processing\TextSource.cs" />
     <Compile Include="processing\WordLevelProcessor.cs" />
     <Compile Include="Program.cs" />

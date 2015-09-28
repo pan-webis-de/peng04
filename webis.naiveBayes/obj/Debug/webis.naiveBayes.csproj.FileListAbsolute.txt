@@ -13,3 +13,12 @@ E:\Winfried\gitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.pdb
 E:\Winfried\gitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.exe
 E:\Winfried\gitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.pdb
 E:\Winfried\gitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.csprojResolveAssemblyReference.cache
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.exe.config
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.exe
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Debug\webis.naiveBayes.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.csprojResolveAssemblyReference.cache
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.exe
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\obj\Debug\webis.naiveBayes.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Debug\Newtonsoft.Json.xml

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,12 @@ namespace webis.naiveBayes.experiments
         {
             var bayesClassifier = new BayesTextClassifier();
 
-            var docReader = new ReadDocumentFromFile();
+            var docReader = new ReadDocumentFromXmlFile();
             var docPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
             var authors = new DirectoryInfo(docPath).GetDirectories();
 
             var categories = new List<TextSource>();
-            var processor = new WordLevelProcessor(); // new CharacterLevelProcessor();
+            var processor = new WordLevelProcessor(); //new WordLevelProcessor(); // 
 
             // Prepare data
             foreach (var item in authors)
@@ -32,7 +33,7 @@ namespace webis.naiveBayes.experiments
                 {
                     try
                     {
-                        dataSource.Add(docReader.ReadDocumentText(doc.FullName));
+                        dataSource.Add(docReader.ReadDocumentText(doc.FullName, Encoding.GetEncoding(1253), new CultureInfo("el-GR")));
                     }
                     catch
                     {
@@ -53,10 +54,18 @@ namespace webis.naiveBayes.experiments
             // choose n from 1 to 4
             for (int n = 1; n <= 4; n++)
             {
-                var smoothing = new AbsoluteSmoothing(0.71977041805630959); //new AbsoluteSmoothing(allInOne, n);
+                Console.WriteLine("-----PREPARE for n = {0}", n);
+                Console.WriteLine("Building hash tables ..", n);
+
+                Parallel.ForEach(categories, category =>
+                {
+                    category.BuildSegmentTable(n);
+                });
+
+                Console.WriteLine("Getting smoothing ready ..");
+                var smoothing = new AbsoluteSmoothing(allInOne, n);
                 var categoriesToTest = new Dictionary<TextSource, CategoryProbabilityDistribution>();
 
-                Console.WriteLine("-----PREPARE for n = {0}", n);
                 foreach(var cat in categories)
                 {
                     categoriesToTest[cat] = new CategoryProbabilityDistribution(cat, smoothing, n);
@@ -65,6 +74,7 @@ namespace webis.naiveBayes.experiments
                 int rightClassified = 0;
                 int wrongClassified = 0;
 
+                Console.WriteLine("-----Algorithm starts now");
                 foreach (var testAuthor in testAuthors)
                 {
                     //foreach (var testDocument in testAuthor.GetFiles())
@@ -75,7 +85,7 @@ namespace webis.naiveBayes.experiments
 
                         foreach (var catDist in categoriesToTest)
                         {
-                            var docText = new[] { docReader.ReadDocumentText(testDocument.FullName) };
+                            var docText = new[] { docReader.ReadDocumentText(testDocument.FullName, Encoding.GetEncoding(1253), new CultureInfo("el-GR")) };
                             var docSource = processor.Process(docText, testAuthor.Name).Documents.First();
 
                             double p = bayesClassifier.P_c(catDist.Value, docSource, n, 1.0 / (double)categories.Count);
