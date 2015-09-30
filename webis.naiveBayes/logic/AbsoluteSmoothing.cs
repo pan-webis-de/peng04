@@ -19,27 +19,30 @@ namespace webis.naiveBayes.logic
 
         public AbsoluteSmoothing(TextSource referenceSource, int n)
         {
+            if (n <= 1)
+            {
+                _b = 0;
+                return;
+            }
+
             _referenceSource = referenceSource;
-            var segments = _referenceSource.GetAllSegments();
 
             int n1 = 0;
             int n2 = 0;
 
-            List<IEnumerable<string>> checkedGrams = new List<IEnumerable<string>>();
+            IEnumerable<NGramCache> nGrams = referenceSource.GetNGramCache().NextSegment.Values;
 
-            foreach (var item in _referenceSource.Documents)
+            while (n > 1)
             {
-                for (int i = 0; i <= item.LanguageSegments.Count - n; i++)
-                {
-                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n).ToArray();
-                    if (checkedGrams.Any(el => el.SequenceEqual(ngram))) continue;
-                    
-                    checkedGrams.Add(ngram);
-                    int frequency = _referenceSource.FindOccurrences(ngram);
+                n--;
+                nGrams = nGrams.SelectMany(el => el.NextSegment.Values);
+            }
 
-                    if (frequency == 1) n1++;
-                    if (frequency == 2) n2++;
-                }
+            foreach (var item in nGrams)
+            {
+                var frequency = Convert.ToInt32(item.Value);
+                if (frequency == 1) n1++;
+                if (frequency == 2) n2++;
             }
 
             _b = (double)n1 / ((double)n1 + 2 * (double)n2);
@@ -47,6 +50,11 @@ namespace webis.naiveBayes.logic
 
         public double Discount(int frequency)
         {
+            // if we cannot find the word at all, give it at least 0.01 count
+            if (frequency == 0)
+            {
+                return CalculationConstants.SmoothingEpsilon;
+            }
             return frequency - _b;
         }
     }

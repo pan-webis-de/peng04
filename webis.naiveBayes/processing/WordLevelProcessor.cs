@@ -21,7 +21,12 @@ namespace webis.naiveBayes.processing
             {
                 var doc = new DocumentSource();
                 var sItem = item.Replace(".", " . ")
-                                .Replace(",", " , ");
+                                .Replace(",", " , ")
+                                .Replace("\r\n", " \r##n ")
+                                .Replace("\n", " \n ")
+                                .Replace(",", " , ")
+                                .Replace("##n", "\n");
+                // consider punctuation marks/new line as seperate words
 
                 foreach (var segment in sItem.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                 {

@@ -12,7 +12,12 @@ namespace webis.naiveBayes
     {
         static void Main(string[] args)
         {
-            if (!args.Any())
+            if(args.Any() && args[0] == "test")
+            {
+                //this is the test case
+                new TiraExperiment().Start(@"C:\Users\Winfried\OneDrive\WS15\Sommerakademie\NEW CORPORA\pan12A");
+            }
+            else if (!args.Any())
             {
                 Console.WriteLine("you must specify a directory");
             }
@@ -22,7 +27,7 @@ namespace webis.naiveBayes
             }
             else
             {
-                new TiraExperiment().Start(args[0], false);
+                new TiraExperiment().Start(args[0]);
             }
 
             Console.WriteLine("Press [ENTER] to continue ...");

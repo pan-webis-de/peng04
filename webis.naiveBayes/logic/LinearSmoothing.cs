@@ -38,6 +38,7 @@ namespace webis.naiveBayes.logic
 
         public double Discount(int frequency)
         {
+            if (frequency == 0) return CalculationConstants.SmoothingEpsilon * factor;
             return frequency * factor;
         }
     }

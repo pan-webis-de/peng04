@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using webis.naiveBayes.logic;
 using webis.naiveBayes.processing;
@@ -15,15 +16,13 @@ namespace webis.naiveBayes.experiments
 {
     public class TiraExperiment
     {
-        public void Start(string mainFolder, bool skipSmoothing)
+        public void Start(string mainFolder)
         {
             var resultSet = new ResultSet();
             var bayesClassifier = new BayesTextClassifier();
 
             var docReader = new ReadDocumentFromTiraFile();
-            var docPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
-            var authors = new DirectoryInfo(docPath).GetDirectories();
-
+            
             var categories = new List<TextSource>();
             var processor = new WordLevelProcessor();
 
@@ -83,7 +82,7 @@ namespace webis.naiveBayes.experiments
                 categories.Add(processor.Process(dataSource, authorName));
             }
 
-            int n = 2; // choose n=2
+            int n = 3; // choose n=3
 
             Console.WriteLine("Scanned {1} documents in {0} categories", categories.Count, categories.Select(el => el.Documents.Count).Aggregate((el1, el2) => el1 + el2));
 
@@ -91,14 +90,21 @@ namespace webis.naiveBayes.experiments
             allInOne.Documents.AddRange(categories.SelectMany(el => el.Documents));
 
             Console.WriteLine("Building hash tables ..", n);
-
+            
             Parallel.ForEach(categories, category =>
             {
-                category.BuildSegmentTable(n);
+                for (int i = 1; i <= n; i++)
+                {
+                    category.BuildSegmentTable(i);
+                    Console.WriteLine("hashed {0} with n={1}", category.Name, i);
+                }
             });
 
+            allInOne.SetNGramCache(NGramCache.Aggregate(categories.Select(el => el.GetNGramCache())));
+            Console.WriteLine("aggregated hashing");
+
             Console.WriteLine("Getting smoothing ready ..");
-            var smoothing = skipSmoothing ? new AbsoluteSmoothing(0.6) : new AbsoluteSmoothing(allInOne, n);
+            var smoothing = new AbsoluteSmoothing(allInOne, n);
             var categoriesToTest = new Dictionary<TextSource, CategoryProbabilityDistribution>();
 
             foreach (var cat in categories)
@@ -107,6 +113,8 @@ namespace webis.naiveBayes.experiments
             }
 
             Console.WriteLine("Start classifying ..");
+            int totalProgress = jsonConfig["unknown-texts"].Count * categoriesToTest.Count;
+            int progress = 0;
 
             foreach (var item in jsonConfig["unknown-texts"])
             {
@@ -114,6 +122,14 @@ namespace webis.naiveBayes.experiments
                 var maxProb = 0.0;
                 var textName = (string)item["unknown-text"];
                 var probs = new List<double>();
+
+                System.Timers.Timer t = new System.Timers.Timer(5000);
+                t.Elapsed += (sender, eventArgs) => 
+                {
+                    Console.Title = "Task is Running. Progress: " + Math.Round((((double)progress / (double)totalProgress) * 100.0), 2).ToString();
+                };
+                t.AutoReset = true;
+                t.Start();
 
                 Parallel.ForEach(categoriesToTest, catDist =>
                 {
@@ -128,21 +144,29 @@ namespace webis.naiveBayes.experiments
                         topCategory = catDist.Key;
                         maxProb = p;
                     }
+
+                    Interlocked.Increment(ref progress);
                 });
 
                 // getting the score
                 probs.Remove(maxProb);
                 double pre_score = 0.0;
+                double max_sub_score = 0.0;
 
                 foreach (var p in probs)
                 {
-                    var subScore = (maxProb - p) / maxProb; // normalized difference
-                    Math.Exp(-subScore);
+                    var subScore = Math.Abs((maxProb - p) / maxProb) * Math.Pow(Math.E, 3); // normalized difference
+                    var eSubScore = Math.Exp(-subScore);
+                    pre_score += eSubScore;
+
+                    if (eSubScore > max_sub_score)
+                        max_sub_score = eSubScore;
                 }
 
+                double score = Math.Round(1.0 - (0.5 * (pre_score / probs.Count) + 0.5 * max_sub_score), 2);
 
-                Console.WriteLine("Classified {0} as author {1}", textName, topCategory.Name);
-                resultSet.answers.Add(new Result(textName, topCategory.Name, 1));
+                Console.WriteLine("Classified {0} as author {1} with score {2}", textName, topCategory.Name, score);
+                resultSet.answers.Add(new Result(textName, topCategory.Name, score));
 
                 Console.WriteLine("writing data to file ...");
                 string data = JsonConvert.SerializeObject(resultSet, Formatting.Indented);

@@ -9,7 +9,7 @@ namespace webis.naiveBayes.logic
 {
     public class CategoryProbabilityDistribution
     {
-        private Dictionary<string, double> _betaCache = new Dictionary<string, double>(); 
+        private NGramCache _betaCache = new NGramCache(); 
         private TextSource _referenceSource;
         private ISmoothingTechnique _smoothing;
 
@@ -24,8 +24,7 @@ namespace webis.naiveBayes.logic
             if (ngram.Count() == 0) throw new ArgumentException("ngram");
             int frequency = _referenceSource.FindOccurrences(ngram);
 
-            // if we cannot find the word at all, give it at least one count (laplace, add one)
-            if (ngram.Count() == 1) return GetProbabilityIfPresent(ngram, frequency + 1);
+            if (ngram.Count() == 1) return GetProbabilityIfPresent(ngram, frequency);
 
             if(frequency > 0)
             {
@@ -40,8 +39,10 @@ namespace webis.naiveBayes.logic
         private double GetBeta(IEnumerable<string> ngram)
         {
             string[] ngramArray = ngram.ToArray();
-            var hash = NGramHashing.Hash(ngramArray.Take(ngramArray.Length - 1));
-            if (_betaCache.ContainsKey(hash)) return _betaCache[hash];
+            string[] shortGram = ngramArray.Take(ngramArray.Length - 1).ToArray();
+
+            double beta;
+            if (_betaCache.TryFindValue(shortGram, out beta) && beta != 0) return beta;
 
             double a = 0.0, b = 0.0;
 
@@ -58,9 +59,9 @@ namespace webis.naiveBayes.logic
                     b += GetProbabilityIfPresent(ngramArray.Skip(1).ToArray(), frequencyB);
                 }
             }
-
-            var beta = (1.0 - a) / (1.0 - b);
-            _betaCache[hash] = beta;
+            
+            beta = (1.0 - a) / (1.0 - b);
+            _betaCache.Increment(shortGram, beta);
             return beta;
         }
 

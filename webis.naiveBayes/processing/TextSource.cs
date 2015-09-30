@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using webis.naiveBayes.logic;
 
 namespace webis.naiveBayes.processing
 {
     public class TextSource
     {
+        private NGramCache _segmentTable;
+
         public TextSource()
         {
             this.Documents = new List<DocumentSource>();
@@ -17,7 +20,7 @@ namespace webis.naiveBayes.processing
 
         public int FindOccurrences(IEnumerable<string> ngram)
         {
-            if(ngram.Count() == 0)
+            if (ngram.Count() == 0)
             {
                 // considering unigrams, we need to fit prob 1 total
                 // this means we have to divide by number of segments total
@@ -25,6 +28,19 @@ namespace webis.naiveBayes.processing
                 return Documents.Aggregate(0, (count, doc) => count + doc.LanguageSegments.Count);
             }
 
+            if (_segmentTable != null)
+            {
+                double data;
+                if (_segmentTable.TryFindValue(ngram, out data))
+                {
+                    return Convert.ToInt32(data);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            
             int result = 0;
 
             foreach (var item in Documents)
@@ -37,15 +53,31 @@ namespace webis.naiveBayes.processing
 
         public void BuildSegmentTable(int n)
         {
-            foreach(var item in Documents)
+            if(_segmentTable == null) _segmentTable = new NGramCache();
+
+            foreach (var item in Documents)
             {
-                item.BuildSegmentTable(n);
+                for (int i = 0; i <= item.LanguageSegments.Count - n; i++)
+                {
+                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n).ToArray();
+                    _segmentTable.Increment(ngram, 1);
+                }
             }
         }
 
         public IEnumerable<string> GetAllSegments()
         {
             return Documents.SelectMany(el => el.LanguageSegments).Distinct().ToArray();
+        }
+
+        public NGramCache GetNGramCache()
+        {
+            return _segmentTable;
+        }
+
+        public void SetNGramCache(NGramCache value)
+        {
+            _segmentTable = value;
         }
 
         public string Name { get; set; }
