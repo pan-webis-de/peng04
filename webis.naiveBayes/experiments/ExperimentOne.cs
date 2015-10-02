@@ -12,16 +12,16 @@ namespace webis.naiveBayes.experiments
 {
     public class ExperimentOne
     {
-        public void Start()
+        public void Start(ILanguageProcessor processor, ISmoothingTechnique smoothing)
         {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             var bayesClassifier = new BayesTextClassifier();
 
             var docReader = new ReadDocumentFromXmlFile();
-            var docPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
+            var docPath = Path.Combine(baseDirectory, "data");
             var authors = new DirectoryInfo(docPath).GetDirectories();
 
             var categories = new List<TextSource>();
-            var processor = new WordLevelProcessor(); //new WordLevelProcessor(); // 
 
             // Prepare data
             foreach (var item in authors)
@@ -46,7 +46,7 @@ namespace webis.naiveBayes.experiments
 
             Console.WriteLine("Scanned {1} documents in {0} categories", categories.Count, categories.Select(el => el.Documents.Count).Aggregate((el1, el2) => el1 + el2));
 
-            var testPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test");
+            var testPath = Path.Combine(baseDirectory, "test");
             var testAuthors = new DirectoryInfo(testPath).GetDirectories();
             var allInOne = new TextSource();
             allInOne.Documents.AddRange(categories.SelectMany(el => el.Documents));
@@ -62,8 +62,10 @@ namespace webis.naiveBayes.experiments
                     category.BuildSegmentTable(n);
                 });
 
+                allInOne.SetNGramCache(NGramCache.Aggregate(categories.Select(el => el.GetNGramCache())));
+
                 Console.WriteLine("Getting smoothing ready ..");
-                var smoothing = new AbsoluteSmoothing(allInOne, n);
+                smoothing.Init(allInOne, n);
                 var categoriesToTest = new Dictionary<TextSource, CategoryProbabilityDistribution>();
 
                 foreach(var cat in categories)
@@ -77,32 +79,30 @@ namespace webis.naiveBayes.experiments
                 Console.WriteLine("-----Algorithm starts now");
                 foreach (var testAuthor in testAuthors)
                 {
-                    //foreach (var testDocument in testAuthor.GetFiles())
-                    Parallel.ForEach(testAuthor.GetFiles(), testDocument =>
+                    foreach (var testDocument in testAuthor.GetFiles())
                     {
                         TextSource topCategory = null;
                         var maxProb = 0.0;
 
-                        foreach (var catDist in categoriesToTest)
-                        {
-                            var docText = new[] { docReader.ReadDocumentText(testDocument.FullName, Encoding.GetEncoding(1253), new CultureInfo("el-GR")) };
-                            var docSource = processor.Process(docText, testAuthor.Name).Documents.First();
+                       Parallel.ForEach(categoriesToTest, catDist =>
+                       {
+                           var docText = new[] { docReader.ReadDocumentText(testDocument.FullName, Encoding.GetEncoding(1253), new CultureInfo("el-GR")) };
+                           var docSource = processor.Process(docText, testAuthor.Name).Documents.First();
 
-                            double p = bayesClassifier.P_c(catDist.Value, docSource, n, 1.0 / (double)categories.Count);
+                           double p = bayesClassifier.P_c(catDist.Value, docSource, n, 1.0 / (double)categories.Count);
 
-                            if (topCategory == null || p > maxProb)
-                            {
-                                topCategory = catDist.Key;
-                                maxProb = p;
-                            }
-                        }
+                           if (topCategory == null || p > maxProb)
+                           {
+                               topCategory = catDist.Key;
+                               maxProb = p;
+                           }
+                       });
 
                         Console.WriteLine("Classified {0} as author {1} - {2}", testDocument.Name, topCategory.Name, topCategory.Name == testAuthor.Name ? "correct" : "incorrect");
 
                         if (topCategory.Name == testAuthor.Name) rightClassified++;
                         else wrongClassified++;
-                    });
-                    //}
+                    }
                 }
 
                 Console.WriteLine("-----SUMMARY");

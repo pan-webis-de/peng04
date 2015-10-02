@@ -1,0 +1,16 @@
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\bin\Release\TiraEvaluation.exe.config
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\bin\Release\TiraEvaluation.exe
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\bin\Release\TiraEvaluation.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\bin\Release\Newtonsoft.Json.dll
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\bin\Release\Newtonsoft.Json.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\bin\Release\Newtonsoft.Json.xml
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\MainWindow.g.cs
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\App.g.cs
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation_MarkupCompile.cache
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation_MarkupCompile.lref
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\MainWindow.baml
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.g.resources
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.Properties.Resources.resources
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.csproj.GenerateResource.Cache
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.exe
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.pdb

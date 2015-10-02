@@ -36,6 +36,7 @@
       <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigFileReader.cs" />
     <Compile Include="experiments\ExperimentOne.cs" />
     <Compile Include="experiments\TiraExperiment.cs" />
     <Compile Include="logic\AbsoluteSmoothing.cs" />
@@ -53,6 +55,7 @@
     <Compile Include="logic\ISmoothingTechnique.cs" />
     <Compile Include="logic\LinearSmoothing.cs" />
     <Compile Include="logic\NGramCache.cs" />
+    <Compile Include="logic\TakeFromArrayExtensions.cs" />
     <Compile Include="processing\CharacterLevelProcessor.cs" />
     <Compile Include="processing\ILanguageProcessor.cs" />
     <Compile Include="processing\DocumentSource.cs" />
@@ -64,7 +67,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

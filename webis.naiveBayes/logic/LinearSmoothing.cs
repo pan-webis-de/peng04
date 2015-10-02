@@ -9,37 +9,50 @@ namespace webis.naiveBayes.logic
 {
     public class LinearSmoothing : ISmoothingTechnique
     {
-        double factor;
+        private double _factor;
+        private bool _initPassed;
 
-        public LinearSmoothing(TextSource referenceSource, int n)
+        public void Init(double factor)
         {
-            var segments = referenceSource.GetAllSegments();
+            if (_initPassed) return;
+            _initPassed = true;
 
+            _factor = factor;
+        }
+
+        public void Init(TextSource referenceSource, int n)
+        {
+            if (_initPassed) return;
+            _initPassed = true;
+
+            if (n < 1)
+            {
+                _factor = 1;
+                return;
+            }
+            
             int n1 = 0;
 
-            List<IEnumerable<string>> checkedGrams = new List<IEnumerable<string>>();
+            IEnumerable<NGramCache> nGrams = referenceSource.GetNGramCache().NextSegment.Values;
 
-            foreach (var item in referenceSource.Documents)
+            while (n > 1)
             {
-                for (int i = 0; i <= item.LanguageSegments.Count - n; i++)
-                {
-                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n).ToArray();
-                    if (checkedGrams.Any(el => el.SequenceEqual(ngram))) continue;
-
-                    checkedGrams.Add(ngram);
-                    int frequency = referenceSource.FindOccurrences(ngram);
-
-                    if (frequency == 1) n1++;
-                }
+                n--;
+                nGrams = nGrams.SelectMany(el => el.NextSegment.Values);
             }
 
-            factor = 1.0 - ((double)n1 / (double)referenceSource.GetAllSegments().Count());
+            foreach (var item in nGrams)
+            {
+                var frequency = Convert.ToInt32(item.Value);
+                if (frequency == 1) n1++;
+            }
+
+            _factor = 1.0 - ((double)n1 / (double)referenceSource.GetAllSegments().Count());
         }
 
         public double Discount(int frequency)
         {
-            if (frequency == 0) return CalculationConstants.SmoothingEpsilon * factor;
-            return frequency * factor;
+            return frequency * _factor;
         }
     }
 }

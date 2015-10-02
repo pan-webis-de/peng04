@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace webis.naiveBayes.logic
 {
-    public class CalculationConstants
+    public static class CalculationConstants
     {
-        public const double SmoothingEpsilon = 0.05;
+        public static double SmoothingEpsilon = 0.05;
     }
 }

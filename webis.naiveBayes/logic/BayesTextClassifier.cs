@@ -12,18 +12,13 @@ namespace webis.naiveBayes.logic
         public double P_c(CategoryProbabilityDistribution trainingDistribution, DocumentSource testData, int n, double prob_c)
         {
             var result = Math.Log10(prob_c);
+            var source = testData.LanguageSegments.ToArray();
 
-            for (int i = 0; i <= testData.LanguageSegments.Count - n; i++)
+            for (int i = 0; i <= source.Length - n; i++)
             {
-                IEnumerable<string> ngram = testData.LanguageSegments.Skip(i).Take(n).ToArray();
-                var xyz = Math.Log10(trainingDistribution.GetProbability(ngram));
-
-                if(xyz < -1000)
-                {
-                    xyz = -1000;
-                }
-
-                result += xyz;
+                string[] ngram = source.GetNGram(i, n);
+                var logProb = Math.Log10(trainingDistribution.GetProbability(ngram));                
+                result += logProb;
             }
 
             return result;

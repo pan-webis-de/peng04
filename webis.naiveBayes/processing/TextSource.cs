@@ -57,10 +57,10 @@ namespace webis.naiveBayes.processing
 
             foreach (var item in Documents)
             {
-                for (int i = 0; i <= item.LanguageSegments.Count - n; i++)
-                {
-                    IEnumerable<string> ngram = item.LanguageSegments.Skip(i).Take(n).ToArray();
-                    _segmentTable.Increment(ngram, 1);
+                var array = item.LanguageSegments.ToArray();
+                for (int i = 0; i <= array.Length - n; i++)
+                {                    
+                    _segmentTable.Increment(array.GetNGram(i, n), 1); // inc count
                 }
             }
         }

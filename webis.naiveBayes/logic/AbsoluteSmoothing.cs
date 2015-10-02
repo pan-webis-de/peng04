@@ -11,15 +11,22 @@ namespace webis.naiveBayes.logic
     {
         private TextSource _referenceSource;
         private double _b;
+        private bool _initPassed;
 
-        public AbsoluteSmoothing(double b)
+        public void Init(double b)
         {
+            if (_initPassed) return;
+            _initPassed = true;
+
             _b = b;
         }
 
-        public AbsoluteSmoothing(TextSource referenceSource, int n)
+        public void Init(TextSource referenceSource, int n)
         {
-            if (n <= 1)
+            if (_initPassed) return;
+            _initPassed = true;
+
+            if (n < 1)
             {
                 _b = 0;
                 return;
@@ -50,11 +57,6 @@ namespace webis.naiveBayes.logic
 
         public double Discount(int frequency)
         {
-            // if we cannot find the word at all, give it at least 0.01 count
-            if (frequency == 0)
-            {
-                return CalculationConstants.SmoothingEpsilon;
-            }
             return frequency - _b;
         }
     }

@@ -21,25 +21,26 @@ namespace webis.naiveBayes.logic
 
         public double GetProbability(IEnumerable<string> ngram)
         {
-            if (ngram.Count() == 0) throw new ArgumentException("ngram");
-            int frequency = _referenceSource.FindOccurrences(ngram);
+            var ngramArray = ngram.ToArray();
 
-            if (ngram.Count() == 1) return GetProbabilityIfPresent(ngram, frequency);
+            if (ngramArray.Length == 0) throw new ArgumentException("ngram");
+            int frequency = _referenceSource.FindOccurrences(ngramArray);
+
+            if (ngramArray.Length == 1) return GetProbabilityIfPresent(ngramArray, frequency);
 
             if(frequency > 0)
             {
-                return GetProbabilityIfPresent(ngram, frequency);
+                return GetProbabilityIfPresent(ngramArray, frequency);
             }
             else
             {
-                return GetBeta(ngram) * GetProbability(ngram.Skip(1));
+                return GetBeta(ngramArray.ToArray()) * GetProbability(ngramArray.GetNGram(1, ngramArray.Length - 1));
             }
         }
 
-        private double GetBeta(IEnumerable<string> ngram)
+        private double GetBeta(string[] ngram)
         {
-            string[] ngramArray = ngram.ToArray();
-            string[] shortGram = ngramArray.Take(ngramArray.Length - 1).ToArray();
+            string[] shortGram = ngram.GetNGram(0, ngram.Length - 1);
 
             double beta;
             if (_betaCache.TryFindValue(shortGram, out beta) && beta != 0) return beta;
@@ -48,15 +49,16 @@ namespace webis.naiveBayes.logic
 
             foreach (var item in _referenceSource.GetAllSegments())
             {
-                ngramArray[ngramArray.Length - 1] = item; // replace last segment
-                int frequencyA = _referenceSource.FindOccurrences(ngramArray);
+                ngram[ngram.Length - 1] = item; // replace last segment
+                int frequencyA = _referenceSource.FindOccurrences(ngram);
 
                 if(frequencyA > 0)
                 {
-                    int frequencyB = _referenceSource.FindOccurrences(ngramArray.Skip(1).ToArray());
+                    var bNGram = ngram.GetNGram(1, ngram.Length - 1);
+                    int frequencyB = _referenceSource.FindOccurrences(bNGram);
 
-                    a += GetProbabilityIfPresent(ngramArray, frequencyA);
-                    b += GetProbabilityIfPresent(ngramArray.Skip(1).ToArray(), frequencyB);
+                    a += GetProbabilityIfPresent(ngram, frequencyA);
+                    b += GetProbabilityIfPresent(bNGram, frequencyB);
                 }
             }
             
@@ -65,9 +67,10 @@ namespace webis.naiveBayes.logic
             return beta;
         }
 
-        private double GetProbabilityIfPresent(IEnumerable<string> ngram, int frequency)
+        private double GetProbabilityIfPresent(string[] ngram, int frequency)
         {
-            return _smoothing.Discount(frequency) / _referenceSource.FindOccurrences(ngram.Take(ngram.Count() - 1));
+            if (frequency == 0) return CalculationConstants.SmoothingEpsilon / _referenceSource.FindOccurrences(ngram.GetNGram(0, ngram.Length - 1));
+            return _smoothing.Discount(frequency) / _referenceSource.FindOccurrences(ngram.GetNGram(0, ngram.Length - 1));
         }
     }
 }

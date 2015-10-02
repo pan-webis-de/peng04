@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -16,7 +17,7 @@ namespace webis.naiveBayes.experiments
 {
     public class TiraExperiment
     {
-        public void Start(string mainFolder)
+        public void Start(string mainFolder, ISmoothingTechnique smoothing, int nGramSize, ILanguageProcessor processor)
         {
             var resultSet = new ResultSet();
             var bayesClassifier = new BayesTextClassifier();
@@ -24,7 +25,6 @@ namespace webis.naiveBayes.experiments
             var docReader = new ReadDocumentFromTiraFile();
             
             var categories = new List<TextSource>();
-            var processor = new WordLevelProcessor();
 
             Console.WriteLine("Scanning...");
             dynamic jsonConfig;
@@ -82,7 +82,7 @@ namespace webis.naiveBayes.experiments
                 categories.Add(processor.Process(dataSource, authorName));
             }
 
-            int n = 3; // choose n=3
+            int n = nGramSize;
 
             Console.WriteLine("Scanned {1} documents in {0} categories", categories.Count, categories.Select(el => el.Documents.Count).Aggregate((el1, el2) => el1 + el2));
 
@@ -104,7 +104,7 @@ namespace webis.naiveBayes.experiments
             Console.WriteLine("aggregated hashing");
 
             Console.WriteLine("Getting smoothing ready ..");
-            var smoothing = new AbsoluteSmoothing(allInOne, n);
+            smoothing.Init(0.6);
             var categoriesToTest = new Dictionary<TextSource, CategoryProbabilityDistribution>();
 
             foreach (var cat in categories)
@@ -116,6 +116,15 @@ namespace webis.naiveBayes.experiments
             int totalProgress = jsonConfig["unknown-texts"].Count * categoriesToTest.Count;
             int progress = 0;
 
+            System.Timers.Timer t = new System.Timers.Timer(5000);
+            t.Elapsed += (sender, eventArgs) =>
+            {
+                Console.Title = "Task is Running. Progress: " + Math.Round((((double)progress / (double)totalProgress) * 100.0), 2).ToString() + "%";
+            };
+
+            t.AutoReset = true;
+            t.Start();
+
             foreach (var item in jsonConfig["unknown-texts"])
             {
                 TextSource topCategory = null;
@@ -123,26 +132,22 @@ namespace webis.naiveBayes.experiments
                 var textName = (string)item["unknown-text"];
                 var probs = new List<double>();
 
-                System.Timers.Timer t = new System.Timers.Timer(5000);
-                t.Elapsed += (sender, eventArgs) => 
-                {
-                    Console.Title = "Task is Running. Progress: " + Math.Round((((double)progress / (double)totalProgress) * 100.0), 2).ToString();
-                };
-                t.AutoReset = true;
-                t.Start();
-
                 Parallel.ForEach(categoriesToTest, catDist =>
                 {
                     var docText = new string[] { docReader.ReadDocumentText(Path.Combine(mainFolder, unknownFolder, textName), encoding, ci) };
                     var docSource = processor.Process(docText, "unknown").Documents.First();
 
-                    double p = bayesClassifier.P_c(catDist.Value, docSource, n, 1.0 / categories.Count);
-                    probs.Add(p);
-
-                    if (topCategory == null || p > maxProb)
+                    double p = bayesClassifier.P_c(catDist.Value, docSource, n, (double)catDist.Key.Documents.Count / (double)allInOne.Documents.Count);
+                    
+                    lock (probs)
                     {
-                        topCategory = catDist.Key;
-                        maxProb = p;
+                        probs.Add(p);
+
+                        if (topCategory == null || p > maxProb)
+                        {
+                            topCategory = catDist.Key;
+                            maxProb = p;
+                        }
                     }
 
                     Interlocked.Increment(ref progress);
