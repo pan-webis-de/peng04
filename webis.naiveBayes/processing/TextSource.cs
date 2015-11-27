@@ -10,6 +10,7 @@ namespace webis.naiveBayes.processing
     public class TextSource
     {
         private NGramCache _segmentTable;
+        private IEnumerable<string> _segmentCache;
 
         public TextSource()
         {
@@ -67,7 +68,8 @@ namespace webis.naiveBayes.processing
 
         public IEnumerable<string> GetAllSegments()
         {
-            return Documents.SelectMany(el => el.LanguageSegments).Distinct().ToArray();
+            if (_segmentCache == null) _segmentCache = Documents.SelectMany(el => el.LanguageSegments).Distinct().ToArray();
+            return _segmentCache;
         }
 
         public NGramCache GetNGramCache()

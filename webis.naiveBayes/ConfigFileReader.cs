@@ -68,7 +68,7 @@ namespace webis.naiveBayes
                     Console.WriteLine("setting:         test case");
                     Console.WriteLine("---------------------- Starting execution [TIRA Experiment]");
 
-                    new TiraExperiment().Start(ConfigurationManager.AppSettings["tiraTestFolder"], sm, nGramSize, lp);
+                    new TiraExperiment().Start(ConfigurationManager.AppSettings["tiraTestFolder"], ConfigurationManager.AppSettings["tiraTestFolder"], sm, nGramSize, lp);
                 }
                 else if (!args.Any())
                 {
@@ -78,12 +78,16 @@ namespace webis.naiveBayes
                 {
                     Console.WriteLine("\n\nDirectory {0} not found!", args[0]);
                 }
+                else if (!Directory.Exists(args[1]))
+                {
+                    Console.WriteLine("\n\nDirectory {0} not found!", args[1]);
+                }
                 else
                 {
                     Console.WriteLine("setting:         real run on folder: ", Path.GetDirectoryName(args[0]));
                     Console.WriteLine("Starting execution ---------------------- [TIRA Experiment]");
 
-                    new TiraExperiment().Start(args[0], sm, nGramSize, lp);
+                    new TiraExperiment().Start(args[0], args[1], sm, nGramSize, lp);
                 }
             }
             else if (experiment == "expOne")

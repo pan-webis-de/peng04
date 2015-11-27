@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace TiraEvaluation
@@ -72,7 +73,14 @@ namespace TiraEvaluation
             {
                 return _evaluateCommand ?? (_evaluateCommand = new RelayCommand(obj =>
                 {
-                    new EvaluationRun().Evaluate(TiraEntries, GroundTruthPath);
+                    try
+                    {
+                        new EvaluationRun().Evaluate(TiraEntries, GroundTruthPath);
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error");
+                    }
                 }, obj => true));
             }
         }

@@ -17,7 +17,7 @@ namespace webis.naiveBayes.experiments
 {
     public class TiraExperiment
     {
-        public void Start(string mainFolder, ISmoothingTechnique smoothing, int nGramSize, ILanguageProcessor processor)
+        public void Start(string mainFolder, string outputDir, ISmoothingTechnique smoothing, int nGramSize, ILanguageProcessor processor)
         {
             var resultSet = new ResultSet();
             var bayesClassifier = new BayesTextClassifier();
@@ -104,7 +104,7 @@ namespace webis.naiveBayes.experiments
             Console.WriteLine("aggregated hashing");
 
             Console.WriteLine("Getting smoothing ready ..");
-            smoothing.Init(0.6);
+            smoothing.Init(allInOne, nGramSize);
             var categoriesToTest = new Dictionary<TextSource, CategoryProbabilityDistribution>();
 
             foreach (var cat in categories)
@@ -175,7 +175,7 @@ namespace webis.naiveBayes.experiments
 
                 Console.WriteLine("writing data to file ...");
                 string data = JsonConvert.SerializeObject(resultSet, Formatting.Indented);
-                using (StreamWriter sw = new StreamWriter(Path.Combine(mainFolder, "results.json"), false))
+                using (StreamWriter sw = new StreamWriter(Path.Combine(outputDir, "answers.json"), false))
                 {
                     sw.Write(data);
                     sw.Flush();

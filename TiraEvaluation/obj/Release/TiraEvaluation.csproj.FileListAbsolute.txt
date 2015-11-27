@@ -14,3 +14,4 @@ C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluat
 C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.csproj.GenerateResource.Cache
 C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.exe
 C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\TiraEvaluation\obj\Release\TiraEvaluation.csprojResolveAssemblyReference.cache
