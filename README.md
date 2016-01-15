@@ -2,7 +2,7 @@
 
 This is a reimplementation of the approach to authorship attribution originally described in
 
-> F. Peng, D. Shuurmans, and S. Wang. [Augmenting naive Bayes classifiers with statistical language models](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.151.556&rep=rep1&type=pdf). Information Retrieval Journal, 7(1), 317-345, 2004 [[paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.151.556&rep=rep1&type=pdf)]
+> Fuchun Peng, Dale Shuurmans, and Shaojun Wang. [Augmenting naive Bayes classifiers with statistical language models](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.151.556&rep=rep1&type=pdf). Information Retrieval Journal, 7(1), 317-345, 2004 [[paper](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.151.556&rep=rep1&type=pdf)]
 
 It was reimplemented as part of a science reproducibility study alongside [14 other authorship attribution approaches](https://github.com/search?q="Who+wrote+the+web"+user:pan-webis-de). The results of the reproducibility study can be found in
 
