@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webis.naiveBayes", "webis.naiveBayes\webis.naiveBayes.csproj", "{740CC2EF-170A-44A6-AB08-29CC96E9E467}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiraEvaluation", "TiraEvaluation\TiraEvaluation.csproj", "{47F15072-DDC7-4ABE-801E-ACF09055285C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "peng04", "peng04\peng04.csproj", "{740CC2EF-170A-44A6-AB08-29CC96E9E467}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{740CC2EF-170A-44A6-AB08-29CC96E9E467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{740CC2EF-170A-44A6-AB08-29CC96E9E467}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{740CC2EF-170A-44A6-AB08-29CC96E9E467}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47F15072-DDC7-4ABE-801E-ACF09055285C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47F15072-DDC7-4ABE-801E-ACF09055285C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47F15072-DDC7-4ABE-801E-ACF09055285C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47F15072-DDC7-4ABE-801E-ACF09055285C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

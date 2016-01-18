@@ -1,0 +1,9 @@
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Debug\peng04.exe.config
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Debug\peng04.exe
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Debug\peng04.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\obj\Debug\peng04.csprojResolveAssemblyReference.cache
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\obj\Debug\peng04.exe
+C:\Users\Winfried\Documents\GitHub\peng04\peng04\obj\Debug\peng04.pdb
