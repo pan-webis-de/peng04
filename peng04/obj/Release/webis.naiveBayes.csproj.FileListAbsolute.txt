@@ -1,9 +1,0 @@
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Release\webis.naiveBayes.exe.config
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Release\webis.naiveBayes.exe
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Release\webis.naiveBayes.pdb
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Release\Newtonsoft.Json.dll
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Release\Newtonsoft.Json.pdb
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\bin\Release\Newtonsoft.Json.xml
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\obj\Release\webis.naiveBayes.exe
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\obj\Release\webis.naiveBayes.pdb
-C:\Users\Winfried\Documents\GitHub\peng04\webis.naiveBayes\obj\Release\webis.naiveBayes.csprojResolveAssemblyReference.cache

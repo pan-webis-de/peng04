@@ -1,8 +1,0 @@
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Release\peng04.exe.config
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Release\peng04.exe
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Release\peng04.pdb
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Release\Newtonsoft.Json.dll
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Release\Newtonsoft.Json.pdb
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\bin\Release\Newtonsoft.Json.xml
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\obj\Release\peng04.exe
-C:\Users\Winfried\Documents\GitHub\peng04\peng04\obj\Release\peng04.pdb
