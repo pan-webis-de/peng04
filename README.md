@@ -50,7 +50,8 @@ The 'peng04.exe.config' can be used to set specific parameters of the used algor
     - smoothingEpsilon: parameter for smoothing (Double)
 
 Example:
-```<?xml version="1.0" encoding="utf-8" ?>
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <appSettings>
     <add key="experiment" value="tira"/>
