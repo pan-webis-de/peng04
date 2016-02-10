@@ -43,7 +43,8 @@ where `unknown_text` is the name of an unknown text as per `meta-file.json`, `au
 ## Configuration
 
 The 'peng04.exe.config' can be used to set specific parameters of the used algortihm:
-
+    
+    - experiment: should be always set to "tira"
     - processor: determines, whether words or characters should be used as tokens (values: word, char)
     - nGramSize: the size of each n-gram (Integer)
     - smoothing: the smoothing technique (values: linear, absolute)
