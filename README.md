@@ -40,6 +40,28 @@ The software accepts as input a path to an inflated dataset's `TOP_DIRECTORY` an
 
 where `unknown_text` is the name of an unknown text as per `meta-file.json`, `author` is the name of a candidate author as per `meta-file.json`, and `score` is as real value in the range [0,1] which indicates the software's confidence in its attribution (0 means completely uncertain, 1 means completely sure).
 
+## Configuration
+
+The 'peng04.exe.config' can be used to set specific parameters of the used algortihm:
+
+    - processor: determines, whether words or characters should be used as tokens (values: word, char)
+    - nGramSize: the size of each n-gram (Integer)
+    - smoothing: the smoothing technique (values: linear, absolute)
+    - smoothingEpsilon: parameter for smoothing (Double)
+
+Example:
+```<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <appSettings>
+    <add key="experiment" value="tira"/>
+    <add key="processor" value="word"/>
+    <add key="nGramSize" value="3"/>
+    <add key="smoothingEpsilon" value="0,05"/>
+    <add key="smoothing" value="absolute"/>
+  </appSettings>
+</configuration>
+```
+
 ## License
 
 Copyright (c) 2015 Winfried Lötzsch
